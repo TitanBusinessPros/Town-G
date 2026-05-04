@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>40‑Acre's In The Desert | Community Builder</title>
+    <link rel="icon" type="image/png" href="https://github.com/TitanBusinessPros/Town-G/raw/main/OCP-Logo-Compressed.png">
+    <style>
+        * { box-sizing: border-box; user-select: none; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1f3a2f 0%, #0e2a1f 100%);
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+        .game-container {
+            max-width: 1600px;
+            width: 100%;
+            background: #2b2b1f;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,240,0.1);
+            padding: 0.75rem;
+        }
+        .dashboard {
+            background: #1e2a1c;
+            border-radius: 1.2rem;
+            padding: 0.5rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #d4b87a;
+            box-shadow: 0 4px 0 #0f1f0c;
+        }
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #2c3a24;
+            padding: 4px 16px;
+            border-radius: 40px;
+        }
+        .stat-card {
+            background: #0f1a0c;
+            padding: 4px 14px;
+            border-radius: 28px;
+            color: #f9e7b3;
+            font-size: 1.1rem;
+            font-family: monospace;
+        }
+        .stat-card span { color: #ffd966; font-weight: 800; }
+        .logo-area {
+            text-align: center;
+            margin: 5px 0 0;
+        }
+        .logo-area img {
+            max-width: 90px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .game-title {
+            text-align: center;
+            margin: 0 0 8px;
+        }
+        .game-title h1 {
+            font-size: 1.6rem;
+            color: #ffecb3;
+            text-shadow: 2px 2px 0 #5a3e1a;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+        .game-title p {
+            color: #d4c99e;
+            font-size: 0.8rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .dropdown-area {
+            background: #1e2a1c;
+            padding: 4px 12px;
+            border-radius: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        select {
+            background: #fdf8e7;
+            border: 2px solid #c2a15b;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        button {
+            background: #8b5a2b;
+            color: #fff0c0;
+            border: none;
+            border-radius: 32px;
+            padding: 5px 14px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .remove-toggle.active { background: #b22222; box-shadow: 0 0 0 2px #ffaa66; }
+        .zoom-controls { display: flex; gap: 6px; background: #231f12; padding: 4px 10px; border-radius: 40px; }
+        .zoom-btn { background: #b87c3a; border: none; font-size: 1.3rem; font-weight: bold; width: 32px; border-radius: 30px; cursor: pointer; color: white; }
+        .guide-icon, .finance-icon {
+            background: #ffe2a4;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #aa7a3c;
+            margin-left: 6px;
+        }
+        .map-wrapper {
+            background: #3a2e1f;
+            border-radius: 24px;
+            padding: 10px;
+            overflow: auto;
+            min-height: 70vh;
+            border: 2px solid #dbc27a;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+            cursor: crosshair;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: pixelated;
+        }
+        .guide-panel, .finance-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 280px;
+            background: #fef7d2;
+            border-left: 10px solid #d4a259;
+            border-radius: 28px 12px 12px 28px;
+            padding: 0.8rem;
+            z-index: 200;
+            box-shadow: 8px 8px 0 #644117;
+            transition: transform 0.2s ease;
+            transform: translateX(0);
+        }
+        .finance-panel { border-left-color: #2c5a2e; background: #f0f5e8; }
+        .guide-panel.hidden, .finance-panel.hidden { transform: translateX(320px); }
+        .guide-close, .finance-close { float: right; background: #a55117; color: white; border: none; border-radius: 30px; width: 26px; }
+        .finance-close { background: #2c5a2e; }
+        .timer-section { background: #000000aa; border-radius: 28px; padding: 3px 10px; font-weight: bold; font-family: monospace; font-size: 1rem; color: white; }
+        .finance-breakdown { font-size: 0.85rem; margin-top: 10px; max-height: 280px; overflow-y: auto; }
+        .finance-breakdown p { margin: 4px 0; }
+        .income { color: #2a7a2a; font-weight: bold; }
+        .expense { color: #b34e2e; font-weight: bold; }
+        button:active { transform: scale(0.96); }
+        @media (max-width: 780px) {
+            .dashboard { flex-direction: column; align-items: stretch; }
+            .stats { justify-content: center; }
+            .guide-panel, .finance-panel { width: 250px; top: 70px; }
+            .map-wrapper { min-height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="logo-area">
+        <img src="https://github.com/TitanBusinessPros/Town-G/raw/main/OCP-Logo-Compressed.png" alt="Open Church Project Logo">
+    </div>
+    <div class="game-title">
+        <h1>🌵 40‑Acre's In The Desert 🏜️</h1>
+        <p>Each grid square = ¼ acre • See how easy it is to build a self‑sustaining community from scratch!</p>
+    </div>
+    <div class="dashboard">
+        <div class="stats">
+            <div class="stat-card">💰 <span id="balanceDisplay">0</span> $</div>
+            <div class="stat-card">📅 <span id="dateDisplay">Jun 1, 2026</span></div>
+            <div class="stat-card">🏕️ <span id="monthlyNet">0</span> $/mo</div>
+            <div class="stat-card">🏠 <span id="livingCount">0</span>/100</div>
+            <div class="timer-section">⏳ <span id="countdownTimer">00:05</span></div>
+        </div>
+        <div class="dropdown-area">
+            <select id="buildSelect">
+                <option value="tent">🏕️ Tent (Free) +$150/mo</option>
+                <option value="tinyHome">🏠 Tiny Home (Free) +$150/mo</option>
+                <option value="camper">🚐 Camper (Free) +$150/mo</option>
+                <option value="kitchen">🍲 Community Kitchen ($10000) -$1000/mo (max1, req elec)</option>
+                <option value="chickenFarm">🐔 Chicken Farm ($1000) +$500/mo (max4, req 26 housing + water)</option>
+                <option value="compost">🌱 Composting ($1000) +$500/mo (max2, req 26 housing)</option>
+                <option value="electricPole">⚡ Electric Pole ($3000) -$500/mo (max1)</option>
+                <option value="laundry">🧺 Laundry ($10000) +$1000/mo (max1)</option>
+                <option value="rabbitCoup">🐇 Rabbit Coup ($1000) +$500/mo (max2, req 26 housing + water)</option>
+                <option value="septicTank">💧 Septic Tank ($10000) -$200/mo (max4, req water meter)</option>
+                <option value="veggieFarm">🥕 Veggie Farm ($1000) +$500/mo (unlimited, req 26 housing + water)</option>
+                <option value="waterMeter">💦 Water Meter ($1000) -$500/mo (max1)</option>
+                <option value="communityCenter">🏛️ Community Center ($20000) -$1000/mo (max1, req elec)</option>
+                <option value="portableToilet">🚽 Portable Toilet ($100) $0/mo (top-left)</option>
+                <option value="waterStation">💧 Water Station ($500) -$25/mo (top-right, req water meter)</option>
+                <option value="picnicArea">🧺 Picnic Area ($3000) -$100/mo (max4, after 20 housing)</option>
+                <option value="transportation">🚚 Transportation ($5000) -$1000/mo (max5, overlay on CC/Kitchen/Parking)</option>
+                <option value="dumpster">🗑️ Dumpster ($100) covers 4 housing (bottom-left)</option>
+                <option value="park">🌳 Park ($3000) -$50/mo (max4)</option>
+                <option value="techSchool">💻 Tech School ($25000) +$1500/mo (max1)</option>
+                <option value="bathroom">🚻 Bathroom ($10000) -$100/mo (covers 25 housing, req septic+elec + adjacent septic)</option>
+                <option value="parkingLot">🅿️ Parking Lot (Free) $0/mo (required 1 per 25 housing)</option>
+                <option value="plantNursery">🌿 Plant Nursery ($1000) +$500/mo (max4)</option>
+            </select>
+            <button id="removeModeBtn" class="remove-toggle">🗑️ Remove OFF</button>
+            <button id="restartBtn">🔄 Restart</button>
+        </div>
+        <div class="zoom-controls">
+            <button id="zoomOutBtn" class="zoom-btn">−</button>
+            <span style="color:#eedd88;">🔍</span>
+            <button id="zoomInBtn" class="zoom-btn">+</button>
+        </div>
+        <div class="guide-icon" id="guideTrigger">📜</div>
+        <div class="finance-icon" id="financeTrigger">📊</div>
+    </div>
+    <div class="map-wrapper" id="mapWrapper">
+        <canvas id="gameCanvas" width="1088" height="680"></canvas>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 8px; gap: 8px;">
+        <small style="color:#cfc99e;">✔️ Click cell to build | Remove mode ON → delete (NO refund)</small>
+        <button id="skipDayBtn" style="background:#7a5a3a;">⏩ Skip Day</button>
+    </div>
+</div>
+
+<div id="guidePanel" class="guide-panel hidden">
+    <button class="guide-close" id="closeGuide">✖</button>
+    <div class="guide-content">
+        <h3>🏜️ 40-Acre's Guide 🌵</h3>
+        <p><strong>Key rules:</strong><br>
+        - Each cell = ¼ acre → 160 cells = 40 acres.<br>
+        - 🚚 Transportation (overlay) must be on CC, Kitchen, or Parking.<br>
+        - ⚡ Electric Pole required before Kitchen, CC, Bathroom.<br>
+        - 🚻 Bathroom needs adjacent septic tank.<br>
+        - 🏠 Max 100 living quarters.<br>
+        - 🏛️ Community Center needed after 26 quarters.<br>
+        - 🍲 Community Kitchen needed after 51 quarters.<br>
+        - 🅿️ Parking Lot (free) required 1 per 25 housing.<br>
+        - 🌾 Farms/Compost need 26 housing first.<br>
+        - 💧 Water stations: housing (1/10) + farms (1 per 4 veg, 1 per 2 chicken/rabbit).<br>
+        - 🌿 Plant Nursery: $1000, +$500/mo, max 4.<br>
+        - Start: $100,000, day length 5 sec.
+        </p>
+        <img src="https://github.com/TitanBusinessPros/Town-G/raw/main/Guide.png" alt="guide" style="width:100%; border-radius: 20px;">
+    </div>
+</div>
+
+<div id="financePanel" class="finance-panel hidden">
+    <button class="finance-close" id="closeFinance">✖</button>
+    <h3>📊 Monthly Report</h3>
+    <div id="financeBreakdown" class="finance-breakdown">Loading...</div>
+</div>
+
+<script>
+    const COLS = 16, ROWS = 10;
+    const BASE_TILE_SIZE = 68;  // larger tiles for better visibility
+    const DAY_DURATION_SEC = 5;
+    const MAX_LIVING_QUARTERS = 100;
+
+    const BUILDINGS = {
+        tent:        { name:"Tent", incomeMonthly:150, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tent.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
+        tinyHome:    { name:"Tiny Home", incomeMonthly:150, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tiny-Home-1.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
+        camper:      { name:"Camper", incomeMonthly:150, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Camper.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
+        kitchen:     { name:"Community Kitchen", incomeMonthly:-1000, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Metal-1.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresElectric:true },
+        chickenFarm: { name:"Chicken Farm", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Chickens.png", maxCount:4, isLivingQuarters:false, isOverlay:false, requiresLiving:26, waterPer:2 },
+        compost:     { name:"Composting", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Compost.png", maxCount:2, isLivingQuarters:false, isOverlay:false, requiresLiving:26 },
+        electricPole:{ name:"Electric Pole", incomeMonthly:-500, cost:3000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Electric.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
+        laundry:     { name:"Laundry", incomeMonthly:1000, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Laundry.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
+        rabbitCoup:  { name:"Rabbit Coup", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Rabbits.png", maxCount:2, isLivingQuarters:false, isOverlay:false, requiresLiving:26, waterPer:2 },
+        septicTank:  { name:"Septic Tank", incomeMonthly:-200, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Septic.png", maxCount:4, isLivingQuarters:false, isOverlay:false, requiresWaterMeter:true },
+        veggieFarm:  { name:"Veggie Farm", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Veggies.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, requiresLiving:26, waterPer:4 },
+        waterMeter:  { name:"Water Meter", incomeMonthly:-500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Water.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
+        communityCenter:{ name:"Community Center", incomeMonthly:-1000, cost:20000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Community-Center.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresElectric:true },
+        portableToilet:{ name:"Portable Toilet", incomeMonthly:0, cost:100, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Portable-Toilet.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"top-left" },
+        waterStation: { name:"Water Station", incomeMonthly:-25, cost:500, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Water-Station.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"top-right", requiresWaterMeter:true },
+        picnicArea:  { name:"Picnic Area", incomeMonthly:-100, cost:3000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Picnic-Area.png", maxCount:4, isLivingQuarters:false, isOverlay:false },
+        transportation:{ name:"Transportation", incomeMonthly:-1000, cost:5000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Transportation.png", maxCount:5, isLivingQuarters:false, isOverlay:true, corner:"bottom-right", requiresBase: ["communityCenter","kitchen","parkingLot"] },
+        dumpster:    { name:"Trash Dumpster", incomeMonthly:0, cost:100, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Dumpster.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"bottom-left" },
+        park:        { name:"Park", incomeMonthly:-50, cost:3000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Park.png", maxCount:4, isLivingQuarters:false, isOverlay:false },
+        techSchool:  { name:"Tech School", incomeMonthly:1500, cost:25000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tech-School.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
+        bathroom:    { name:"Bathroom", incomeMonthly:-100, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Bathroom.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, requiresSeptic:true, requiresElectric:true },
+        parkingLot:  { name:"Parking Lot", incomeMonthly:0, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Parking-Lot.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, canBePlacedAnywhere:true },
+        plantNursery: { name:"Plant Nursery", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Plant-Nursery.png", maxCount:4, isLivingQuarters:false, isOverlay:false }
+    };
+
+    let grid = Array(ROWS).fill().map(()=>Array(COLS).fill(null));
+    let toiletOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+    let waterStationOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+    let dumpsterOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+    let transportationOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+
+    let balance = 100000;
+    let currentDate = new Date(2026,5,1);
+    let removeMode = false;
+    let selectedBuilding = "tent";
+    let zoom = 1.0;
+    const MIN_ZOOM = 0.5, MAX_ZOOM = 2.5;
+
+    // DOM
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;  // crisp sprites
+    const balanceSpan = document.getElementById('balanceDisplay');
+    const dateSpan = document.getElementById('dateDisplay');
+    const monthlyNetSpan = document.getElementById('monthlyNet');
+    const livingCountSpan = document.getElementById('livingCount');
+    const countdownSpan = document.getElementById('countdownTimer');
+    const buildSelect = document.getElementById('buildSelect');
+    const removeModeBtn = document.getElementById('removeModeBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const skipDayBtn = document.getElementById('skipDayBtn');
+    const guideTrigger = document.getElementById('guideTrigger');
+    const guidePanel = document.getElementById('guidePanel');
+    const closeGuide = document.getElementById('closeGuide');
+    const financeTrigger = document.getElementById('financeTrigger');
+    const financePanel = document.getElementById('financePanel');
+    const closeFinance = document.getElementById('closeFinance');
+    const financeBreakdownDiv = document.getElementById('financeBreakdown');
+
+    // Images
+    const bgImage = new Image(); bgImage.src = "https://github.com/TitanBusinessPros/Town-G/raw/main/Stage-1-BG.png";
+    const spriteImages = {};
+    for (let key of Object.keys(BUILDINGS)) {
+        spriteImages[key] = new Image();
+        spriteImages[key].src = BUILDINGS[key].sprite;
+    }
+
+    let dayTimerInterval = null, countdownInterval = null;
+    let secondsLeftInDay = DAY_DURATION_SEC;
+
+    // Helper counts
+    function countBuildingType(buildingKey) {
+        let cnt = 0;
+        for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) if (grid[r][c]===buildingKey) cnt++;
+        return cnt;
+    }
+    function countElectricPoles() { return countBuildingType('electricPole'); }
+    function countDumpsters() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(dumpsterOverlay[r][c2]) c++; return c; }
+    function countPortableToilets() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(toiletOverlay[r][c2]) c++; return c; }
+    function countBathrooms() { return countBuildingType('bathroom'); }
+    function countSepticTanks() { return countBuildingType('septicTank'); }
+    function countCommunityCenters() { return countBuildingType('communityCenter'); }
+    function countKitchens() { return countBuildingType('kitchen'); }
+    function countParkingLots() { return countBuildingType('parkingLot'); }
+    function countWaterStations() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(waterStationOverlay[r][c2]) c++; return c; }
+    function countPicnicAreas() { return countBuildingType('picnicArea'); }
+    function countTransportation() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(transportationOverlay[r][c2]) c++; return c; }
+    function countLivingQuarters() { let cnt=0; for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) { let b=grid[r][c]; if(b && BUILDINGS[b]?.isLivingQuarters) cnt++; } return cnt; }
+    function countVeggieFarms() { return countBuildingType('veggieFarm'); }
+    function countChickenFarms() { return countBuildingType('chickenFarm'); }
+    function countRabbitCoops() { return countBuildingType('rabbitCoup'); }
+
+    // Adjacency for septic
+    function isAdjacentToSepticTank(row, col) {
+        const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+        for(let [dr,dc] of dirs) {
+            let nr = row+dr, nc = col+dc;
+            if(nr>=0 && nr<ROWS && nc>=0 && nc<COLS && grid[nr][nc] === 'septicTank') return true;
+        }
+        return false;
+    }
+    function canPlaceBathroom(row, col) {
+        if(!isAdjacentToSepticTank(row, col)) {
+            showTemporaryMessage(`🚻 Bathroom must be adjacent to a Septic Tank (up/down/left/right).`);
+            return false;
+        }
+        if(countElectricPoles()===0) {
+            showTemporaryMessage(`⚡ Need an Electric Pole before placing a Bathroom!`);
+            return false;
+        }
+        return true;
+    }
+    function canRemoveSepticTank(row, col) {
+        const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+        for(let [dr,dc] of dirs) {
+            let nr = row+dr, nc = col+dc;
+            if(nr>=0 && nr<ROWS && nc>=0 && nc<COLS && grid[nr][nc] === 'bathroom') {
+                let hasOtherSeptic = false;
+                const dirs2 = [[-1,0],[1,0],[0,-1],[0,1]];
+                for(let [dr2,dc2] of dirs2) {
+                    let nr2 = nr+dr2, nc2 = nc+dc2;
+                    if((nr2!==row || nc2!==col) && nr2>=0 && nr2<ROWS && nc2>=0 && nc2<COLS && grid[nr2][nc2] === 'septicTank') {
+                        hasOtherSeptic = true;
+                        break;
+                    }
+                }
+                if(!hasOtherSeptic) {
+                    showTemporaryMessage(`💧 Cannot remove this Septic Tank: adjacent bathroom would have no septic!`);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Water & farm requirements
+    function getRequiredWaterForFarms() {
+        let veg = countVeggieFarms();
+        let chicken = countChickenFarms();
+        let rabbit = countRabbitCoops();
+        return Math.ceil(veg/4) + Math.ceil(chicken/2) + Math.ceil(rabbit/2);
+    }
+    function getRequiredWaterForHousing(livingCount) { return Math.ceil(livingCount / 10); }
+    function canPlaceWaterDependentBuilding(buildingKey) {
+        const living = countLivingQuarters();
+        if(living < 26) {
+            showTemporaryMessage(`🌾 Need at least 26 living quarters before placing ${BUILDINGS[buildingKey].name}. Currently ${living}.`);
+            return false;
+        }
+        let newVeg = countVeggieFarms(), newChick = countChickenFarms(), newRab = countRabbitCoops();
+        if(buildingKey === 'veggieFarm') newVeg++;
+        else if(buildingKey === 'chickenFarm') newChick++;
+        else if(buildingKey === 'rabbitCoup') newRab++;
+        let needWater = Math.ceil(newVeg/4) + Math.ceil(newChick/2) + Math.ceil(newRab/2);
+        if(countWaterStations() < needWater) {
+            showTemporaryMessage(`💧 Need ${needWater} water station(s) for farms (1 per 4 veg, 1 per 2 chicken/rabbit). You have ${countWaterStations()}.`);
+            return false;
+        }
+        return true;
+    }
+
+    // Sanitation & parking
+    function getRequiredSanitationUnits(livingCount) {
+        if(livingCount===0) return 0;
+        const bathrooms = countBathrooms();
+        if(bathrooms>0) {
+            const covered = bathrooms * 25;
+            if(livingCount <= covered) return 0;
+            return Math.ceil((livingCount - covered)/2);
+        }
+        return Math.ceil(livingCount/2);
+    }
+    function getRequiredParkingLots(livingCount) {
+        return livingCount===0 ? 0 : Math.ceil(livingCount/25);
+    }
+
+    function canPlaceLivingQuarter() {
+        const currentLiving = countLivingQuarters();
+        if(currentLiving >= MAX_LIVING_QUARTERS) { showTemporaryMessage(`❌ Max ${MAX_LIVING_QUARTERS} living quarters reached!`); return false; }
+        const newLiving = currentLiving+1;
+        if(countTransportation()===0) { showTemporaryMessage(`🚚 Need at least one Transportation before any living quarter!`); return false; }
+        if(newLiving >= 26 && countCommunityCenters()===0) { showTemporaryMessage(`🏛️ Need a Community Center before placing ${newLiving}th quarter (required after 26).`); return false; }
+        if(newLiving >= 51 && countKitchens()===0) { showTemporaryMessage(`🍲 Need a Community Kitchen before placing ${newLiving}th quarter (required after 51).`); return false; }
+        const dumpsters = countDumpsters();
+        if(newLiving > dumpsters*4) { showTemporaryMessage(`🗑️ Need more dumpsters! Capacity ${dumpsters*4}, need ${Math.ceil(newLiving/4)}.`); return false; }
+        const waterNeeded = getRequiredWaterForHousing(newLiving) + getRequiredWaterForFarms();
+        if(countWaterStations() < waterNeeded) { showTemporaryMessage(`💧 Need ${waterNeeded} water stations total (housing + farms).`); return false; }
+        let requiredPicnic = 0;
+        if(newLiving>20) requiredPicnic = Math.ceil(newLiving/25);
+        if(countPicnicAreas() < requiredPicnic) { showTemporaryMessage(`🧺 Need ${requiredPicnic} picnic areas (1 per 25 after 20).`); return false; }
+        const requiredSan = getRequiredSanitationUnits(newLiving);
+        if(countPortableToilets() < requiredSan) { showTemporaryMessage(`🚽 Need ${requiredSan} portable toilets or a bathroom (covers 25).`); return false; }
+        const requiredParking = getRequiredParkingLots(newLiving);
+        if(countParkingLots() < requiredParking) { showTemporaryMessage(`🅿️ Need ${requiredParking} parking lots (1 per 25 housing).`); return false; }
+        return true;
+    }
+
+    function canPlaceTransportation(row,col) {
+        const base = grid[row][col];
+        const allowed = BUILDINGS.transportation.requiresBase;
+        if(!allowed.includes(base)) {
+            showTemporaryMessage(`🚚 Transportation only on Community Center, Kitchen, or Parking Lot!`);
+            return false;
+        }
+        if(transportationOverlay[row][col]) return showTemporaryMessage(`Already here`);
+        return true;
+    }
+
+    function monthlyNet() {
+        let total = 0;
+        for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
+            let b=grid[r][c]; if(b && BUILDINGS[b]) total+=BUILDINGS[b].incomeMonthly;
+            if(waterStationOverlay[r][c]) total+=BUILDINGS.waterStation.incomeMonthly;
+            if(transportationOverlay[r][c]) total+=BUILDINGS.transportation.incomeMonthly;
+        }
+        return total;
+    }
+
+    function updateLivingCountUI() { livingCountSpan.innerText = countLivingQuarters(); }
+    function updateBalanceUI() { balanceSpan.innerText = Math.floor(balance); }
+    function updateMonthlyNetUI() { monthlyNetSpan.innerText = monthlyNet(); }
+    function updateDateUI() { dateSpan.innerText = currentDate.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); }
+    function updateCountdownDisplay() { let m=Math.floor(secondsLeftInDay/60), s=secondsLeftInDay%60; countdownSpan.innerText=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+
+    function getFinancialBreakdown() {
+        let inc=0, exp=0, details=[];
+        for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) {
+            let b=grid[r][c]; if(b && BUILDINGS[b]) {
+                let val=BUILDINGS[b].incomeMonthly;
+                if(val>0) { inc+=val; details.push(`+$${val} ${BUILDINGS[b].name}`); }
+                else if(val<0) { exp+=-val; details.push(`-$${-val} ${BUILDINGS[b].name}`); }
+            }
+            if(waterStationOverlay[r][c]) { exp+=25; details.push(`-$$25 Water Station`); }
+            if(transportationOverlay[r][c]) { exp+=1000; details.push(`-$$1000 Transportation`); }
+        }
+        return { income:inc, expenses:exp, net:inc-exp, details };
+    }
+    function updateFinancePanel() {
+        let br = getFinancialBreakdown();
+        let html = `<p class="income">💰 Income: +$${br.income}</p><p class="expense">💸 Expenses: -$${br.expenses}</p>`;
+        html += `<p><strong>📈 Net: ${br.net>=0?'+':''}$${br.net}</strong></p><hr><ul style="list-style:none;">`;
+        br.details.forEach(d => html+=`<li class="${d.startsWith('+')?'income':'expense'}">${d}</li>`);
+        html+=`</ul>`;
+        financeBreakdownDiv.innerHTML = html;
+    }
+
+    function applyMonthlyFinances() {
+        let net = monthlyNet();
+        if(net!==0) { balance+=net; updateBalanceUI(); showTemporaryMessage(`📆 Month change! Net: ${net>=0?'+':''}$${net}`); }
+        updateMonthlyNetUI(); updateFinancePanel(); saveGameToLocal();
+    }
+
+    function tryPlaceBuilding(row, col, buildingKey) {
+        const building = BUILDINGS[buildingKey];
+        if(!building) return false;
+
+        // Overlays
+        if(building.isOverlay) {
+            if(buildingKey === 'portableToilet') {
+                if(toiletOverlay[row][col]) return showTemporaryMessage("Already a toilet");
+                if(balance<building.cost) return showTempCost(building.cost);
+                balance-=building.cost; toiletOverlay[row][col]=true;
+                showTemporaryMessage(`🚽 Toilet placed - $${building.cost}`);
+                drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true;
+            } else if(buildingKey === 'waterStation') {
+                if(waterStationOverlay[row][col]) return showTemporaryMessage("Water station here");
+                if(countBuildingType('waterMeter')===0) return showTemporaryMessage("Need Water Meter first!");
+                if(balance<building.cost) return showTempCost(building.cost);
+                balance-=building.cost; waterStationOverlay[row][col]=true;
+                showTemporaryMessage(`💧 Water station - $${building.cost}`);
+                updateBalanceUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true;
+            } else if(buildingKey === 'dumpster') {
+                if(dumpsterOverlay[row][col]) return showTemporaryMessage("Dumpster here");
+                if(balance<building.cost) return showTempCost(building.cost);
+                balance-=building.cost; dumpsterOverlay[row][col]=true;
+                showTemporaryMessage(`🗑️ Dumpster - $${building.cost}`);
+                updateBalanceUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true;
+            } else if(buildingKey === 'transportation') {
+                if(!canPlaceTransportation(row,col)) return false;
+                if(balance<building.cost) return showTempCost(building.cost);
+                balance-=building.cost; transportationOverlay[row][col]=true;
+                showTemporaryMessage(`🚚 Transportation on ${BUILDINGS[grid[row][col]].name} - $${building.cost}`);
+                updateBalanceUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true;
+            }
+            return false;
+        }
+
+        // Normal building
+        if(row<0||row>=ROWS||col<0||col>=COLS) return false;
+        if(grid[row][col]!==null) { showTemporaryMessage("Cell occupied! Use remove mode."); return false; }
+
+        if(buildingKey === 'bathroom' && !canPlaceBathroom(row,col)) return false;
+        if(['veggieFarm','chickenFarm','rabbitCoup','compost'].includes(buildingKey) && !canPlaceWaterDependentBuilding(buildingKey)) return false;
+
+        if(building.requiresElectric && countElectricPoles()===0) { showTemporaryMessage(`⚡ Need Electric Pole for ${building.name}!`); return false; }
+        if(buildingKey==='septicTank' && building.requiresWaterMeter && countBuildingType('waterMeter')===0) { showTemporaryMessage("💧 Need Water Meter for Septic!"); return false; }
+        if(buildingKey==='bathroom' && building.requiresSeptic && countSepticTanks()===0) { showTemporaryMessage("🚽 Need Septic Tank first!"); return false; }
+
+        if(countBuildingType(buildingKey) >= building.maxCount) { showTemporaryMessage(`Max ${building.name} reached.`); return false; }
+        if(building.isLivingQuarters && !canPlaceLivingQuarter()) return false;
+        if(balance < building.cost) return showTempCost(building.cost);
+
+        balance -= building.cost;
+        grid[row][col] = buildingKey;
+        updateBalanceUI(); updateLivingCountUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel();
+        showTemporaryMessage(`✓ ${building.name} placed!`);
+        return true;
+    }
+
+    function removeAtCell(row,col) {
+        if(transportationOverlay[row][col]) { transportationOverlay[row][col]=false; showTemporaryMessage("🚚 Transportation removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
+        if(toiletOverlay[row][col]) { toiletOverlay[row][col]=false; showTemporaryMessage("🚽 Toilet removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
+        if(waterStationOverlay[row][col]) { waterStationOverlay[row][col]=false; showTemporaryMessage("💧 Water station removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
+        if(dumpsterOverlay[row][col]) { dumpsterOverlay[row][col]=false; showTemporaryMessage("🗑️ Dumpster removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
+        if(grid[row][col]!==null) {
+            let b=grid[row][col];
+            if(b === 'septicTank' && !canRemoveSepticTank(row,col)) return false;
+            grid[row][col]=null;
+            showTemporaryMessage(`🗑️ Removed ${BUILDINGS[b].name} (no refund)`);
+            updateLivingCountUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true;
+        }
+        showTemporaryMessage("Nothing to remove"); return false;
+    }
+
+    // Drawing with crisp rendering
+    function drawMap() {
+        let tileSize = BASE_TILE_SIZE * zoom;
+        canvas.width = COLS * tileSize;
+        canvas.height = ROWS * tileSize;
+        canvas.style.width = `${canvas.width}px`;
+        canvas.style.height = `${canvas.height}px`;
+        ctx.imageSmoothingEnabled = false;
+        for(let row=0;row<ROWS;row++) {
+            for(let col=0;col<COLS;col++) {
+                let x=col*tileSize, y=row*tileSize;
+                if(bgImage.complete && bgImage.naturalWidth) ctx.drawImage(bgImage,x,y,tileSize,tileSize);
+                else { ctx.fillStyle="#ccaa77"; ctx.fillRect(x,y,tileSize,tileSize); ctx.fillStyle="#b87c3a"; ctx.fillRect(x+4,y+4,tileSize-8,tileSize-8); }
+                ctx.strokeStyle="#c9a87b"; ctx.strokeRect(x+1,y+1,tileSize-2,tileSize-2);
+                let b=grid[row][col];
+                if(b && spriteImages[b]?.complete && spriteImages[b].naturalWidth) {
+                    ctx.drawImage(spriteImages[b], x+2, y+2, tileSize-4, tileSize-4);
+                } else if(b) {
+                    ctx.font = `${Math.floor(tileSize*0.4)}px monospace`;
+                    ctx.fillStyle = "#fff";
+                    let emoji={tent:"🏕️",tinyHome:"🏠",camper:"🚐",kitchen:"🍲",chickenFarm:"🐔",compost:"🌱",electricPole:"⚡",laundry:"🧺",rabbitCoup:"🐇",septicTank:"💧",veggieFarm:"🥕",waterMeter:"💦",communityCenter:"🏛️",picnicArea:"🧺",park:"🌳",techSchool:"💻",bathroom:"🚻",parkingLot:"🅿️",plantNursery:"🌿"};
+                    ctx.fillText(emoji[b]||"🏗️", x+12, y+tileSize-14);
+                }
+                let os = tileSize*0.35;
+                if(toiletOverlay[row][col]) { let img=spriteImages.portableToilet; if(img?.complete) ctx.drawImage(img,x+2,y+2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#b0d0ff"; ctx.fillText("🚽",x+4,y+os); } }
+                if(waterStationOverlay[row][col]) { let img=spriteImages.waterStation; if(img?.complete) ctx.drawImage(img,x+tileSize-os-2,y+2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#88ccff"; ctx.fillText("💧",x+tileSize-os,y+os); } }
+                if(dumpsterOverlay[row][col]) { let img=spriteImages.dumpster; if(img?.complete) ctx.drawImage(img,x+2,y+tileSize-os-2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#aa8866"; ctx.fillText("🗑️",x+4,y+tileSize-6); } }
+                if(transportationOverlay[row][col]) { let img=spriteImages.transportation; if(img?.complete) ctx.drawImage(img,x+tileSize-os-2,y+tileSize-os-2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#ffaa66"; ctx.fillText("🚚",x+tileSize-os-4,y+tileSize-8); } }
+            }
+        }
+    }
+
+    function showTemporaryMessage(msg) { let d=document.createElement('div'); d.innerText=msg; d.style.cssText="position:fixed; bottom:20px; left:20px; background:#000000bb; color:#ffefb0; padding:6px 14px; border-radius:30px; z-index:999; font-family:monospace"; document.body.appendChild(d); setTimeout(()=>d.remove(),2000); }
+    function showTempCost(c) { showTemporaryMessage(`💰 Need $${c}`); return false; }
+
+    function advanceOneDay() { let oldMonth=currentDate.getMonth(); currentDate.setDate(currentDate.getDate()+1); if(currentDate.getMonth()!==oldMonth) applyMonthlyFinances(); updateDateUI(); updateMonthlyNetUI(); drawMap(); saveGameToLocal(); secondsLeftInDay=DAY_DURATION_SEC; updateCountdownDisplay(); }
+    function startGameTimer() { if(dayTimerInterval) clearInterval(dayTimerInterval); if(countdownInterval) clearInterval(countdownInterval); dayTimerInterval=setInterval(()=>advanceOneDay(), DAY_DURATION_SEC*1000); countdownInterval=setInterval(()=>{ if(secondsLeftInDay>0) secondsLeftInDay--; else secondsLeftInDay=DAY_DURATION_SEC; updateCountdownDisplay(); },1000); }
+    function resetDayTimer() { if(dayTimerInterval) clearInterval(dayTimerInterval); if(countdownInterval) clearInterval(countdownInterval); secondsLeftInDay=DAY_DURATION_SEC; updateCountdownDisplay(); startGameTimer(); }
+    function skipDay() { advanceOneDay(); resetDayTimer(); saveGameToLocal(); }
+
+    function saveGameToLocal() { localStorage.setItem('desertTownSave', JSON.stringify({grid,toiletOverlay,waterStationOverlay,dumpsterOverlay,transportationOverlay,balance,dateISO:currentDate.toISOString(),removeMode,zoom})); }
+    function loadGameFromLocal() {
+        let raw=localStorage.getItem('desertTownSave'); if(!raw) return false;
+        try {
+            let d=JSON.parse(raw);
+            if(d.grid) grid=d.grid; else grid=Array(ROWS).fill().map(()=>Array(COLS).fill(null));
+            if(d.toiletOverlay) toiletOverlay=d.toiletOverlay; else toiletOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            if(d.waterStationOverlay) waterStationOverlay=d.waterStationOverlay; else waterStationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            if(d.dumpsterOverlay) dumpsterOverlay=d.dumpsterOverlay; else dumpsterOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            if(d.transportationOverlay) transportationOverlay=d.transportationOverlay; else transportationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            if(typeof d.balance==='number') balance=d.balance;
+            if(d.dateISO) currentDate=new Date(d.dateISO);
+            if(typeof d.removeMode==='boolean') removeMode=d.removeMode;
+            if(typeof d.zoom==='number') zoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,d.zoom));
+            updateRemoveModeUI(); updateBalanceUI(); updateDateUI(); updateMonthlyNetUI(); updateLivingCountUI(); drawMap(); updateFinancePanel(); return true;
+        } catch(e){return false;}
+    }
+    function updateRemoveModeUI() { if(removeMode) { removeModeBtn.classList.add('active'); removeModeBtn.innerText='🗑️ Remove ON'; } else { removeModeBtn.classList.remove('active'); removeModeBtn.innerText='🗑️ Remove OFF'; } }
+    function toggleRemoveMode() { removeMode=!removeMode; updateRemoveModeUI(); saveGameToLocal(); }
+    function restartGame() {
+        if(confirm("Restart? All progress lost!")) {
+            if(dayTimerInterval) clearInterval(dayTimerInterval); if(countdownInterval) clearInterval(countdownInterval);
+            grid=Array(ROWS).fill().map(()=>Array(COLS).fill(null));
+            toiletOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            waterStationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            dumpsterOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            transportationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            balance=100000; currentDate=new Date(2026,5,1); removeMode=false; zoom=1.0;
+            selectedBuilding="tent"; buildSelect.value="tent";
+            updateRemoveModeUI(); updateBalanceUI(); updateDateUI(); updateMonthlyNetUI(); updateLivingCountUI(); drawMap(); updateFinancePanel();
+            secondsLeftInDay=DAY_DURATION_SEC; updateCountdownDisplay();
+            localStorage.removeItem('desertTownSave'); saveGameToLocal(); startGameTimer();
+            showTemporaryMessage("🔄 Game restarted!");
+        }
+    }
+
+    function handleCanvasClick(e) { let rect=canvas.getBoundingClientRect(), scaleX=canvas.width/rect.width, scaleY=canvas.height/rect.height; let clientX,clientY; if(e.touches){ clientX=e.touches[0].clientX; clientY=e.touches[0].clientY; e.preventDefault(); } else { clientX=e.clientX; clientY=e.clientY; } let canvasX=(clientX-rect.left)*scaleX, canvasY=(clientY-rect.top)*scaleY; let tileSize=BASE_TILE_SIZE*zoom; let col=Math.floor(canvasX/tileSize), row=Math.floor(canvasY/tileSize); if(row>=0 && row<ROWS && col>=0 && col<COLS) { if(removeMode) removeAtCell(row,col); else tryPlaceBuilding(row,col,selectedBuilding); drawMap(); } }
+    function setZoom(z) { zoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,z)); drawMap(); }
+    function zoomIn() { setZoom(zoom+0.12); } function zoomOut() { setZoom(zoom-0.12); }
+    function onWheelZoom(e) { if(e.ctrlKey||e.metaKey){ e.preventDefault(); setZoom(zoom+(e.deltaY>0?-0.08:0.08)); } }
+
+    let initialPinch=null;
+    function onTouchStart(e){if(e.touches.length===2){ let dx=e.touches[0].clientX-e.touches[1].clientX; let dy=e.touches[0].clientY-e.touches[1].clientY; initialPinch=Math.hypot(dx,dy); } }
+    function onTouchMove(e){ if(initialPinch && e.touches.length===2){ let dx=e.touches[0].clientX-e.touches[1].clientX; let dy=e.touches[0].clientY-e.touches[1].clientY; let newDist=Math.hypot(dx,dy); setZoom(zoom*(newDist/initialPinch)); initialPinch=newDist; e.preventDefault(); } }
+    function onTouchEnd(){ initialPinch=null; }
+
+    function preloadAllImages(cb){ let loaded=0; let imgs=[bgImage,...Object.values(spriteImages)]; imgs.forEach(img=>{ if(img.complete) loaded++; else { img.addEventListener('load',()=>{loaded++; if(loaded===imgs.length) cb();}); img.addEventListener('error',()=>{loaded++; if(loaded===imgs.length) cb();}); } }); if(loaded===imgs.length) cb(); }
+    function init() {
+        preloadAllImages(()=>{
+            if(!loadGameFromLocal()) { grid=Array(ROWS).fill().map(()=>Array(COLS).fill(null)); balance=100000; currentDate=new Date(2026,5,1); zoom=1; removeMode=false; updateRemoveModeUI(); updateBalanceUI(); updateDateUI(); updateMonthlyNetUI(); updateLivingCountUI(); drawMap(); updateFinancePanel(); saveGameToLocal(); }
+            startGameTimer(); updateCountdownDisplay();
+        });
+        canvas.addEventListener('click',handleCanvasClick);
+        canvas.addEventListener('touchstart',(e)=>{ e.preventDefault(); handleCanvasClick(e); },{passive:false});
+        window.addEventListener('wheel',onWheelZoom,{passive:false});
+        canvas.addEventListener('touchstart',onTouchStart); canvas.addEventListener('touchmove',onTouchMove); canvas.addEventListener('touchend',onTouchEnd);
+        zoomInBtn.addEventListener('click',zoomIn); zoomOutBtn.addEventListener('click',zoomOut);
+        removeModeBtn.addEventListener('click',toggleRemoveMode);
+        skipDayBtn.addEventListener('click',skipDay);
+        restartBtn.addEventListener('click',restartGame);
+        buildSelect.addEventListener('change',(e)=>{ selectedBuilding=e.target.value; });
+        guideTrigger.addEventListener('click',()=>guidePanel.classList.remove('hidden'));
+        closeGuide.addEventListener('click',()=>guidePanel.classList.add('hidden'));
+        financeTrigger.addEventListener('click',()=>{ financePanel.classList.remove('hidden'); updateFinancePanel(); });
+        closeFinance.addEventListener('click',()=>financePanel.classList.add('hidden'));
+        selectedBuilding=buildSelect.value;
+    }
+    init();
+</script>
+</body>
+</html>
