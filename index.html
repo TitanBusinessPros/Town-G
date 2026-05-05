@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>40‑Acre's In The Desert | Community Builder</title>
-    <link rel="icon" type="image/png" href="https://github.com/TitanBusinessPros/Town-G/raw/main/OCP-Logo-Compressed.png">
+    <title>40‑Acre's In The Desert | Concrete Foundation</title>
+    <link rel="icon" type="image/png" href="https://github.com/TitanBusinessPros/Town-G/raw/main/Titan%20Logo-2.png">
     <style>
         * { box-sizing: border-box; user-select: none; }
         body {
@@ -179,11 +179,11 @@
 <body>
 <div class="game-container">
     <div class="logo-area">
-        <img src="https://github.com/TitanBusinessPros/Town-G/raw/main/OCP-Logo-Compressed.png" alt="Open Church Project Logo">
+        <img src="https://github.com/TitanBusinessPros/Town-G/raw/main/Titan%20Logo-2.png" alt="Open Church Project Logo">
     </div>
     <div class="game-title">
         <h1>🌵 40‑Acre's In The Desert 🏜️</h1>
-        <p>Each grid square = ¼ acre • See how easy it is to build a self‑sustaining community from scratch!</p>
+        <p>Concrete foundation required for key structures | Start $250,000 | House costs $10,000</p>
     </div>
     <div class="dashboard">
         <div class="stats">
@@ -198,25 +198,26 @@
                 <option value="tent">🏕️ Tent (Free) +$150/mo</option>
                 <option value="tinyHome">🏠 Tiny Home (Free) +$150/mo</option>
                 <option value="camper">🚐 Camper (Free) +$150/mo</option>
-                <option value="house">🏡 House (upgrade) +$150/mo</option>
-                <option value="kitchen">🍲 Community Kitchen ($10000) -$1000/mo (max1, req elec)</option>
+                <option value="house">🏡 House (upgrade) +$150/mo (Cost $10,000)</option>
+                <option value="concrete">🪨 Concrete Slab ($5000) -$100/mo (bottom-right)</option>
+                <option value="kitchen">🍲 Community Kitchen ($10000) -$1000/mo (max1, req elec+concrete)</option>
                 <option value="chickenFarm">🐔 Chicken Farm ($1000) +$500/mo (max4, req 26 housing + water)</option>
                 <option value="compost">🌱 Composting ($1000) +$500/mo (max2, req 26 housing)</option>
                 <option value="electricPole">⚡ Electric Pole ($3000) -$500/mo (max1)</option>
-                <option value="laundry">🧺 Laundry ($10000) +$1000/mo (max1, adjacent septic)</option>
+                <option value="laundry">🧺 Laundry ($10000) +$1000/mo (max1, adjacent septic+concrete)</option>
                 <option value="rabbitCoup">🐇 Rabbit Coup ($1000) +$500/mo (max2, req 26 housing + water)</option>
                 <option value="septicTank">💧 Septic Tank ($10000) -$200/mo (max4, req water meter)</option>
                 <option value="veggieFarm">🥕 Veggie Farm ($1000) +$500/mo (unlimited, req 26 housing + water)</option>
                 <option value="waterMeter">💦 Water Meter ($1000) -$500/mo (max1)</option>
-                <option value="communityCenter">🏛️ Community Center ($20000) -$1000/mo (max1, req elec)</option>
+                <option value="communityCenter">🏛️ Community Center ($20000) -$1000/mo (max1, req elec+concrete)</option>
                 <option value="portableToilet">🚽 Portable Toilet ($100) -$100/mo (top-left)</option>
                 <option value="waterStation">💧 Water Station ($500) -$25/mo (top-right, req water meter)</option>
                 <option value="picnicArea">🧺 Picnic Area ($3000) -$100/mo (max4, after 20 housing)</option>
                 <option value="transportation">🚚 Transportation ($5000) -$1000/mo (max5, overlay on CC/Kitchen/Parking)</option>
                 <option value="dumpster">🗑️ Dumpster ($100) -$100/mo (covers 4 housing, bottom-left)</option>
                 <option value="park">🌳 Park ($3000) -$50/mo (max4)</option>
-                <option value="techSchool">💻 Tech School ($25000) +$1500/mo (max1)</option>
-                <option value="bathroom">🚻 Bathroom ($10000) -$100/mo (covers 25 housing, req septic+elec + adjacent septic)</option>
+                <option value="techSchool">💻 Tech School ($25000) +$1500/mo (max1, req concrete)</option>
+                <option value="bathroom">🚻 Bathroom ($10000) -$100/mo (covers 25 housing, req septic+elec+adjacent septic+concrete)</option>
                 <option value="parkingLot">🅿️ Parking Lot (Free) $0/mo (required 1 per 25 housing)</option>
                 <option value="plantNursery">🌿 Plant Nursery ($1000) +$500/mo (max4)</option>
             </select>
@@ -236,7 +237,7 @@
         <canvas id="gameCanvas" width="1280" height="800"></canvas>
     </div>
     <div style="display: flex; justify-content: space-between; margin-top: 8px; gap: 8px;">
-        <small style="color:#cfc99e;">✔️ Click cell to build | Remove mode ON → delete | Upgrade mode ON → upgrade Tent/Tiny/Camper to House ($5000, income unchanged)</small>
+        <small style="color:#cfc99e;">✔️ Click cell to build | Concrete required for Kitchen, Laundry, Bathroom, Tech School, Community Center | House upgrade/placement $10,000</small>
         <button id="skipDayBtn" style="background:#7a5a3a;">⏩ Skip Day</button>
     </div>
 </div>
@@ -244,23 +245,22 @@
 <div id="guidePanel" class="guide-panel hidden">
     <button class="guide-close" id="closeGuide">✖</button>
     <div class="guide-content">
-        <h3>🏜️ 40-Acre's Guide 🌵</h3>
+        <h3>🏜️ 40-Acre's Guide + Concrete 🌵</h3>
+        <p><strong>NEW RULE:</strong> Concrete Slab ($5000 / -$100 monthly) must be poured BEFORE building Community Kitchen, Laundry, Bathroom, Tech School, or Community Center. Concrete sits bottom-right corner.</p>
         <p><strong>Key rules:</strong><br>
+        - Start $250,000 | House costs $10,000 (upgrade or direct build).<br>
         - Each cell = ¼ acre → 160 cells = 40 acres.<br>
+        - 🪨 Concrete: $5000 build, -$100 maintenance (required for key buildings)<br>
         - 🚚 Transportation (overlay) on CC, Kitchen, or Parking.<br>
         - ⚡ Electric Pole before Kitchen, CC, Bathroom.<br>
         - 🚻 Bathroom needs adjacent septic.<br>
         - 🧺 Laundry needs adjacent septic.<br>
-        - 🏠 Upgrade Tent/Tiny/Camper to House ($5000 one‑time, income same $150/mo).<br>
+        - 🏠 Upgrade Tent/Tiny/Camper to House ($10000 one‑time).<br>
         - 🏠 Max 100 living quarters.<br>
         - 🏛️ Community Center needed after 26 quarters.<br>
         - 🍲 Community Kitchen needed after 51 quarters.<br>
-        - 🅿️ Parking Lot (free) 1 per 25 housing.<br>
         - 🌾 Farms need 26 housing first.<br>
-        - 💧 Water stations: housing (1/10) + farms.<br>
-        - 🗑️ Dumpster: $100 build, -$100/mo, covers 4 housing.<br>
-        - 🚽 Portable toilet: $100 build, -$100/mo.<br>
-        - Start: $100,000, day length 5 sec.
+        - 🗑️ Dumpster covers 4 housing.
         </p>
         <img src="https://github.com/TitanBusinessPros/Town-G/raw/main/Guide.png" alt="guide" style="width:100%; border-radius: 20px;">
     </div>
@@ -277,32 +277,34 @@
     const BASE_TILE_SIZE = 80;
     const DAY_DURATION_SEC = 5;
     const MAX_LIVING_QUARTERS = 100;
+    const START_BALANCE = 250000;   // start money
 
     const BUILDINGS = {
         tent:        { name:"Tent", incomeMonthly:150, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tent.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
         tinyHome:    { name:"Tiny Home", incomeMonthly:150, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tiny-Home-1.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
         camper:      { name:"Camper", incomeMonthly:150, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Camper.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
-        house:       { name:"House", incomeMonthly:150, cost:5000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/House.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
-        kitchen:     { name:"Community Kitchen", incomeMonthly:-1000, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Metal-1.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresElectric:true },
+        house:       { name:"House", incomeMonthly:150, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/House.png", maxCount:Infinity, isLivingQuarters:true, isOverlay:false },
+        kitchen:     { name:"Community Kitchen", incomeMonthly:-1000, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Metal-1.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresElectric:true, requiresConcrete:true },
         chickenFarm: { name:"Chicken Farm", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Chickens.png", maxCount:4, isLivingQuarters:false, isOverlay:false, requiresLiving:26, waterPer:2 },
         compost:     { name:"Composting", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Compost.png", maxCount:2, isLivingQuarters:false, isOverlay:false, requiresLiving:26 },
         electricPole:{ name:"Electric Pole", incomeMonthly:-500, cost:3000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Electric.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
-        laundry:     { name:"Laundry", incomeMonthly:1000, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Laundry.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresSepticAdjacent:true },
+        laundry:     { name:"Laundry", incomeMonthly:1000, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Laundry.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresSepticAdjacent:true, requiresConcrete:true },
         rabbitCoup:  { name:"Rabbit Coup", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Rabbits.png", maxCount:2, isLivingQuarters:false, isOverlay:false, requiresLiving:26, waterPer:2 },
         septicTank:  { name:"Septic Tank", incomeMonthly:-200, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Septic.png", maxCount:4, isLivingQuarters:false, isOverlay:false, requiresWaterMeter:true },
         veggieFarm:  { name:"Veggie Farm", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Veggies.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, requiresLiving:26, waterPer:4 },
         waterMeter:  { name:"Water Meter", incomeMonthly:-500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Water.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
-        communityCenter:{ name:"Community Center", incomeMonthly:-1000, cost:20000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Community-Center.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresElectric:true },
+        communityCenter:{ name:"Community Center", incomeMonthly:-1000, cost:20000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Community-Center.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresElectric:true, requiresConcrete:true },
         portableToilet:{ name:"Portable Toilet", incomeMonthly:-100, cost:100, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Portable-Toilet.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"top-left" },
         waterStation: { name:"Water Station", incomeMonthly:-25, cost:500, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Water-Station.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"top-right", requiresWaterMeter:true },
         picnicArea:  { name:"Picnic Area", incomeMonthly:-100, cost:3000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Picnic-Area.png", maxCount:4, isLivingQuarters:false, isOverlay:false },
         transportation:{ name:"Transportation", incomeMonthly:-1000, cost:5000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Transportation.png", maxCount:5, isLivingQuarters:false, isOverlay:true, corner:"bottom-right", requiresBase: ["communityCenter","kitchen","parkingLot"] },
         dumpster:    { name:"Trash Dumpster", incomeMonthly:-100, cost:100, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Dumpster.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"bottom-left" },
         park:        { name:"Park", incomeMonthly:-50, cost:3000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Park.png", maxCount:4, isLivingQuarters:false, isOverlay:false },
-        techSchool:  { name:"Tech School", incomeMonthly:1500, cost:25000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tech-School.png", maxCount:1, isLivingQuarters:false, isOverlay:false },
-        bathroom:    { name:"Bathroom", incomeMonthly:-100, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Bathroom.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, requiresSeptic:true, requiresElectric:true },
+        techSchool:  { name:"Tech School", incomeMonthly:1500, cost:25000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Tech-School.png", maxCount:1, isLivingQuarters:false, isOverlay:false, requiresConcrete:true },
+        bathroom:    { name:"Bathroom", incomeMonthly:-100, cost:10000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Bathroom.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, requiresSeptic:true, requiresElectric:true, requiresConcrete:true },
         parkingLot:  { name:"Parking Lot", incomeMonthly:0, cost:0, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Parking-Lot.png", maxCount:Infinity, isLivingQuarters:false, isOverlay:false, canBePlacedAnywhere:true },
-        plantNursery: { name:"Plant Nursery", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Plant-Nursery.png", maxCount:4, isLivingQuarters:false, isOverlay:false }
+        plantNursery: { name:"Plant Nursery", incomeMonthly:500, cost:1000, sprite:"https://github.com/TitanBusinessPros/Town-G/raw/main/Plant-Nursery.png", maxCount:4, isLivingQuarters:false, isOverlay:false },
+        concrete:    { name:"Concrete Slab", incomeMonthly:-100, cost:5000, sprite:"", maxCount:Infinity, isLivingQuarters:false, isOverlay:true, corner:"bottom-right" }
     };
 
     let grid = Array(ROWS).fill().map(()=>Array(COLS).fill(null));
@@ -310,8 +312,9 @@
     let waterStationOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
     let dumpsterOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
     let transportationOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+    let concreteOverlay = Array(ROWS).fill().map(()=>Array(COLS).fill(false));   // concrete overlay
 
-    let balance = 100000;
+    let balance = START_BALANCE;
     let currentDate = new Date(2026,5,1);
     let removeMode = false;
     let upgradeMode = false;
@@ -354,7 +357,6 @@
     let dayTimerInterval = null, countdownInterval = null;
     let secondsLeftInDay = DAY_DURATION_SEC;
 
-    // Helper counts
     function countBuildingType(buildingKey) {
         let cnt = 0;
         for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) if (grid[r][c]===buildingKey) cnt++;
@@ -363,6 +365,7 @@
     function countElectricPoles() { return countBuildingType('electricPole'); }
     function countDumpsters() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(dumpsterOverlay[r][c2]) c++; return c; }
     function countPortableToilets() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(toiletOverlay[r][c2]) c++; return c; }
+    function countConcreteSlabs() { let c=0; for(let r=0;r<ROWS;r++) for(let c2=0;c2<COLS;c2++) if(concreteOverlay[r][c2]) c++; return c; }
     function countBathrooms() { return countBuildingType('bathroom'); }
     function countSepticTanks() { return countBuildingType('septicTank'); }
     function countCommunityCenters() { return countBuildingType('communityCenter'); }
@@ -376,7 +379,11 @@
     function countChickenFarms() { return countBuildingType('chickenFarm'); }
     function countRabbitCoops() { return countBuildingType('rabbitCoup'); }
 
-    // Adjacency helpers
+    function requiresConcrete(buildingKey) {
+        const b = BUILDINGS[buildingKey];
+        return b && b.requiresConcrete === true;
+    }
+
     function isAdjacentToSepticTank(row, col) {
         const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
         for(let [dr,dc] of dirs) {
@@ -418,7 +425,6 @@
         return true;
     }
 
-    // Water & farm requirements
     function getRequiredWaterForFarms() {
         let veg = countVeggieFarms(), chicken = countChickenFarms(), rabbit = countRabbitCoops();
         return Math.ceil(veg/4) + Math.ceil(chicken/2) + Math.ceil(rabbit/2);
@@ -436,7 +442,6 @@
         return true;
     }
 
-    // Sanitation & parking
     function getRequiredSanitationUnits(livingCount) {
         if(livingCount===0) return 0;
         const bathrooms = countBathrooms();
@@ -483,6 +488,7 @@
             let b=grid[r][c]; if(b && BUILDINGS[b]) total+=BUILDINGS[b].incomeMonthly;
             if(waterStationOverlay[r][c]) total+=BUILDINGS.waterStation.incomeMonthly;
             if(transportationOverlay[r][c]) total+=BUILDINGS.transportation.incomeMonthly;
+            if(concreteOverlay[r][c]) total+=BUILDINGS.concrete.incomeMonthly;
         }
         return total;
     }
@@ -503,6 +509,7 @@
             }
             if(waterStationOverlay[r][c]) { exp+=25; details.push(`-$$25 Water Station`); }
             if(transportationOverlay[r][c]) { exp+=1000; details.push(`-$$1000 Transportation`); }
+            if(concreteOverlay[r][c]) { exp+=100; details.push(`-$$100 Concrete Slab`); }
         }
         return { income:inc, expenses:exp, net:inc-exp, details };
     }
@@ -521,7 +528,7 @@
         updateMonthlyNetUI(); updateFinancePanel(); saveGameToLocal();
     }
 
-    // Upgrade mode: one‑time $5000 to replace Tent/Tiny/Camper with House (income unchanged)
+    // UPGRADE: from tent/tiny/camper to house costs $10000
     function upgradeLivingQuarter(row, col) {
         const current = grid[row][col];
         if(!current) return false;
@@ -529,8 +536,8 @@
             showTemporaryMessage(`Only Tent, Tiny Home, or Camper can be upgraded to House.`);
             return false;
         }
-        if(balance < 5000) { showTemporaryMessage(`💰 Need $5000 to upgrade to House.`); return false; }
-        balance -= 5000;
+        if(balance < 10000) { showTemporaryMessage(`💰 Need $10000 to upgrade to House.`); return false; }
+        balance -= 10000;
         grid[row][col] = 'house';
         updateBalanceUI(); updateLivingCountUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel();
         showTemporaryMessage(`🏡 Upgraded to House! (Income remains $150/mo)`);
@@ -541,7 +548,18 @@
         const building = BUILDINGS[buildingKey];
         if(!building) return false;
 
-        // Overlays
+        // CONCRETE overlay
+        if(buildingKey === 'concrete') {
+            if(concreteOverlay[row][col]) return showTemporaryMessage("Concrete slab already here");
+            if(balance<building.cost) return showTempCost(building.cost);
+            balance-=building.cost;
+            concreteOverlay[row][col]=true;
+            showTemporaryMessage(`🪨 Concrete slab poured - $${building.cost}, -$100/mo (now required for key buildings)`);
+            updateBalanceUI(); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel();
+            return true;
+        }
+
+        // other overlays
         if(building.isOverlay) {
             if(buildingKey === 'portableToilet') {
                 if(toiletOverlay[row][col]) return showTemporaryMessage("Already a toilet");
@@ -572,7 +590,12 @@
             return false;
         }
 
-        // Normal building
+        // regular building with concrete requirement
+        if(requiresConcrete(buildingKey) && !concreteOverlay[row][col]) {
+            showTemporaryMessage(`🪨 ${building.name} requires a Concrete Slab on this cell first! (Cost $5000, -$100/mo)`);
+            return false;
+        }
+
         if(row<0||row>=ROWS||col<0||col>=COLS) return false;
         if(grid[row][col]!==null) { showTemporaryMessage("Cell occupied! Use remove or upgrade mode."); return false; }
 
@@ -596,6 +619,16 @@
     }
 
     function removeAtCell(row,col) {
+        if(concreteOverlay[row][col]) {
+            const buildingHere = grid[row][col];
+            if(buildingHere && requiresConcrete(buildingHere)) {
+                showTemporaryMessage(`❌ Cannot remove concrete: ${BUILDINGS[buildingHere].name} depends on it. Remove the building first.`);
+                return false;
+            }
+            concreteOverlay[row][col]=false;
+            showTemporaryMessage(`🪨 Concrete slab removed (no refund)`);
+            drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true;
+        }
         if(transportationOverlay[row][col]) { transportationOverlay[row][col]=false; showTemporaryMessage("🚚 Transportation removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
         if(toiletOverlay[row][col]) { toiletOverlay[row][col]=false; showTemporaryMessage("🚽 Toilet removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
         if(waterStationOverlay[row][col]) { waterStationOverlay[row][col]=false; showTemporaryMessage("💧 Water station removed"); drawMap(); saveGameToLocal(); updateMonthlyNetUI(); updateFinancePanel(); return true; }
@@ -636,6 +669,16 @@
                 if(toiletOverlay[row][col]) { let img=spriteImages.portableToilet; if(img?.complete) ctx.drawImage(img,x+2,y+2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#b0d0ff"; ctx.fillText("🚽",x+4,y+os); } }
                 if(waterStationOverlay[row][col]) { let img=spriteImages.waterStation; if(img?.complete) ctx.drawImage(img,x+tileSize-os-2,y+2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#88ccff"; ctx.fillText("💧",x+tileSize-os,y+os); } }
                 if(dumpsterOverlay[row][col]) { let img=spriteImages.dumpster; if(img?.complete) ctx.drawImage(img,x+2,y+tileSize-os-2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#aa8866"; ctx.fillText("🗑️",x+4,y+tileSize-6); } }
+                if(concreteOverlay[row][col]) {
+                    ctx.fillStyle = "#8c8c7a";
+                    ctx.shadowBlur = 0;
+                    ctx.fillRect(x+tileSize-os-4, y+tileSize-os-4, os-2, os-2);
+                    ctx.fillStyle = "#5a5a4a";
+                    ctx.fillRect(x+tileSize-os-3, y+tileSize-os-3, os-6, os-6);
+                    ctx.font = `${Math.floor(os*0.7)}px monospace`;
+                    ctx.fillStyle = "#ddddbb";
+                    ctx.fillText("🪨", x+tileSize-os-2, y+tileSize-6);
+                }
                 if(transportationOverlay[row][col]) { let img=spriteImages.transportation; if(img?.complete) ctx.drawImage(img,x+tileSize-os-2,y+tileSize-os-2,os,os); else { ctx.font=`${os}px monospace`; ctx.fillStyle="#ffaa66"; ctx.fillText("🚚",x+tileSize-os-4,y+tileSize-8); } }
             }
         }
@@ -649,7 +692,7 @@
     function resetDayTimer() { if(dayTimerInterval) clearInterval(dayTimerInterval); if(countdownInterval) clearInterval(countdownInterval); secondsLeftInDay=DAY_DURATION_SEC; updateCountdownDisplay(); startGameTimer(); }
     function skipDay() { advanceOneDay(); resetDayTimer(); saveGameToLocal(); }
 
-    function saveGameToLocal() { localStorage.setItem('desertTownSave', JSON.stringify({grid,toiletOverlay,waterStationOverlay,dumpsterOverlay,transportationOverlay,balance,dateISO:currentDate.toISOString(),removeMode,upgradeMode,zoom})); }
+    function saveGameToLocal() { localStorage.setItem('desertTownSave', JSON.stringify({grid,toiletOverlay,waterStationOverlay,dumpsterOverlay,transportationOverlay,concreteOverlay,balance,dateISO:currentDate.toISOString(),removeMode,upgradeMode,zoom})); }
     function loadGameFromLocal() {
         let raw=localStorage.getItem('desertTownSave'); if(!raw) return false;
         try {
@@ -659,7 +702,8 @@
             if(d.waterStationOverlay) waterStationOverlay=d.waterStationOverlay; else waterStationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
             if(d.dumpsterOverlay) dumpsterOverlay=d.dumpsterOverlay; else dumpsterOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
             if(d.transportationOverlay) transportationOverlay=d.transportationOverlay; else transportationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
-            if(typeof d.balance==='number') balance=d.balance;
+            if(d.concreteOverlay) concreteOverlay=d.concreteOverlay; else concreteOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            if(typeof d.balance==='number') balance=d.balance; else balance=START_BALANCE;
             if(d.dateISO) currentDate=new Date(d.dateISO);
             if(typeof d.removeMode==='boolean') removeMode=d.removeMode;
             if(typeof d.upgradeMode==='boolean') upgradeMode=d.upgradeMode;
@@ -681,12 +725,13 @@
             waterStationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
             dumpsterOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
             transportationOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
-            balance=100000; currentDate=new Date(2026,5,1); removeMode=false; upgradeMode=false; zoom=1.0;
+            concreteOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
+            balance=START_BALANCE; currentDate=new Date(2026,5,1); removeMode=false; upgradeMode=false; zoom=1.0;
             selectedBuilding="tent"; buildSelect.value="tent";
             updateModeUI(); updateBalanceUI(); updateDateUI(); updateMonthlyNetUI(); updateLivingCountUI(); drawMap(); updateFinancePanel();
             secondsLeftInDay=DAY_DURATION_SEC; updateCountdownDisplay();
             localStorage.removeItem('desertTownSave'); saveGameToLocal(); startGameTimer();
-            showTemporaryMessage("🔄 Game restarted!");
+            showTemporaryMessage("🔄 Game restarted! House upgrade/purchase now $10,000.");
         }
     }
 
@@ -718,7 +763,8 @@
         preloadAllImages(()=>{
             if(!loadGameFromLocal()) {
                 grid=Array(ROWS).fill().map(()=>Array(COLS).fill(null));
-                balance=100000; currentDate=new Date(2026,5,1); zoom=1; removeMode=false; upgradeMode=false;
+                balance=START_BALANCE; currentDate=new Date(2026,5,1); zoom=1; removeMode=false; upgradeMode=false;
+                concreteOverlay=Array(ROWS).fill().map(()=>Array(COLS).fill(false));
                 updateModeUI(); updateBalanceUI(); updateDateUI(); updateMonthlyNetUI(); updateLivingCountUI(); drawMap(); updateFinancePanel(); saveGameToLocal();
             }
             startGameTimer(); updateCountdownDisplay();
